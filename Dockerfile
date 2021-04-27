@@ -3,20 +3,25 @@
 # VERSION	1.0
 
 # use the ubuntu base image provided by dotCloud
-FROM ubuntu
+FROM ubuntu:18.04
 MAINTAINER grode, gabriel_rode@hotmail.com
 
 # copy config file for mysql
 ADD files/my.cnf /etc/mysql/my.cnf
 
-RUN apt-get install -y gpgv
+#RUN apt-get install -y gpgv
+# RUN apt-get install -y gnupg
 
-# make sure the package repository is up to date
-# RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
-# Resuelve  GPG error: http://archive.ubuntu.com/ubuntu precise Release: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 40976EAF437D05B5
-#RUN apt-get update && apt-get install -y gnupg2
-# RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 40976EAF437D05B5
-# RUN apt-get update 
+# Configuro el repositorio de paquetes
+# Referencia para saber que significa cada cosa
+# https://askubuntu.com/questions/58364/whats-the-difference-between-multiverse-universe-restricted-and-main/58365#58365
+# Linea orignal
+#RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
+
+# Linea tuneada
+RUN echo "deb http://mirrors.eze.sysarmy.com/ubuntu/ bionic main universe" > /etc/apt/sources.list
+
+RUN apt-get update 
 
 # install apache2
 #RUN apt-get -y install apache2
