@@ -9,28 +9,33 @@ MAINTAINER grode, gabriel_rode@hotmail.com
 # copy config file for mysql
 ADD files/my.cnf /etc/mysql/my.cnf
 
+RUN apt-get install -y gpgv
+
 # make sure the package repository is up to date
-RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
-RUN apt-get update
+# RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
+# Resuelve  GPG error: http://archive.ubuntu.com/ubuntu precise Release: The following signatures couldn't be verified because the public key is not available: NO_PUBKEY 40976EAF437D05B5
+#RUN apt-get update && apt-get install -y gnupg2
+# RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 40976EAF437D05B5
+# RUN apt-get update 
 
 # install apache2
-RUN apt-get -y install apache2
+#RUN apt-get -y install apache2
 
 # install php
-RUN apt-get -y install php5
-RUN apt-get -y install libapache2-mod-php5
+#RUN apt-get -y install php5
+#RUN apt-get -y install libapache2-mod-php5
 
 # hack for not start mysql-server cause of /sbin/initctl
-RUN dpkg-divert --local --rename --add /sbin/initctl
-RUN ln -s /bin/true /sbin/initctl
+#RUN dpkg-divert --local --rename --add /sbin/initctl
+#RUN ln -s /bin/true /sbin/initctl
 
 # install mysql
-RUN apt-get install -y -o Dpkg::Options::="--force-confold" mysql-common
-RUN DEBIAN_FRONTEND=noninteractive apt-get install -q -y mysql-server
-RUN apt-get install -y libapache2-mod-auth-mysql php5-mysql
+#RUN apt-get install -y -o Dpkg::Options::="--force-confold" mysql-common
+#RUN DEBIAN_FRONTEND=noninteractive apt-get install -q -y mysql-server
+#RUN apt-get install -y libapache2-mod-auth-mysql php5-mysql
 
 # config for root login from remote
-RUN (/usr/bin/mysqld_safe &); sleep 5; echo "grant all privileges on *.* to root@'%';" | mysql -u root # -ppassword
+#RUN (/usr/bin/mysqld_safe &); sleep 5; echo "grant all privileges on *.* to root@'%';" | mysql -u root # -ppassword
 #CMD ["/usr/bin/mysqld_safe"]
 
 ## Aca empiezo a tocar para customiza mi instalación
