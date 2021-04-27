@@ -111,10 +111,10 @@ RUN apt-get update && apt-get install apache2 -y
 # ADD files/_registrationTEXT.php /home/sfproject/apps/frontend/modules/mail/_registrationTEXT.php
 
 # expose http & ssh port
+# https://stackoverflow.com/questions/22111060/what-is-the-difference-between-expose-and-publish-in-docker
 #EXPOSE 8080
 EXPOSE 80
 EXPOSE 22
 
 # 
-#CMD ["/usr/sbin/apache2", "-D", "FOREGROUND"]
-
+CMD ["apachectl", "-D", "FOREGROUND"]
