@@ -1,27 +1,39 @@
-# Symfony 1.4
+# Symfony 1.5
 #
-# VERSION	1.0
+# VERSION 1.0
 
-# use the ubuntu base image provided by dotCloud
 FROM ubuntu:18.04
 MAINTAINER grode, gabriel_rode@hotmail.com
 
 # copy config file for mysql
-ADD files/my.cnf /etc/mysql/my.cnf
+#ADD files/my.cnf /etc/mysql/my.cnf
 
-#RUN apt-get install -y gpgv
-# RUN apt-get install -y gnupg
+#
+#
+#
+
 
 # Configuro el repositorio de paquetes
-# Referencia para saber que significa cada cosa
-# https://askubuntu.com/questions/58364/whats-the-difference-between-multiverse-universe-restricted-and-main/58365#58365
+# Referencias para saber que significa cada cosa:
+#   - https://askubuntu.com/questions/1032415/what-is-deb-deb-src-stable-xenial-main-in-etc-apt-sources-list
+#   - https://askubuntu.com/questions/58364/whats-the-difference-between-multiverse-universe-restricted-and-main/58365#58365
 # Linea orignal
-#RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
+# RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe" > /etc/apt/sources.list
 
 # Linea tuneada
-RUN echo "deb http://mirrors.eze.sysarmy.com/ubuntu/ bionic main universe" > /etc/apt/sources.list
+# RUN echo "deb http://us.archive.ubuntu.com/ubuntu bionic main universe" > /etc/apt/sources.list
+# RUN echo "deb http://us.archive.ubuntu.com/ubuntu/ bionic main restricted" > /etc/apt/sources.list
+# RUN echo "deb http://us.archive.ubuntu.com/ubuntu/ bionic-updates main restricted" > /etc/apt/sources.list
+# RUN echo "deb http://us.archive.ubuntu.com/ubuntu/ bionic universe" > /etc/apt/sources.list
 
-RUN apt-get update 
+
+
+RUN apt-get update && apt-get install apache2 -y
+
+# RUN apt-get update && apt-get install -y \ 
+# 	apache2 \
+# 	php \
+# 	libapache2-mod-php
 
 # install apache2
 #RUN apt-get -y install apache2
@@ -99,7 +111,8 @@ RUN apt-get update
 # ADD files/_registrationTEXT.php /home/sfproject/apps/frontend/modules/mail/_registrationTEXT.php
 
 # expose http & ssh port
-EXPOSE 8080
+#EXPOSE 8080
+EXPOSE 80
 EXPOSE 22
 
 # 
