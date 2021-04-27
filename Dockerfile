@@ -27,13 +27,15 @@ MAINTAINER grode, gabriel_rode@hotmail.com
 # RUN echo "deb http://us.archive.ubuntu.com/ubuntu/ bionic universe" > /etc/apt/sources.list
 
 
+# RUN apt-get update && apt-get install apache2 -y
 
-RUN apt-get update && apt-get install apache2 -y
+# Hace que la instalacion de tz-data no se cuelgue
+ENV DEBIAN_FRONTEND="noninteractive"
 
-# RUN apt-get update && apt-get install -y \ 
-# 	apache2 \
-# 	php \
-# 	libapache2-mod-php
+RUN apt-get update && apt-get install -y \ 
+	apache2 \
+	php \
+	libapache2-mod-php
 
 # install apache2
 #RUN apt-get -y install apache2
@@ -116,5 +118,5 @@ RUN apt-get update && apt-get install apache2 -y
 EXPOSE 80
 EXPOSE 22
 
-# 
-CMD ["apachectl", "-D", "FOREGROUND"]
+# Arranco Apache
+# CMD ["apachectl", "-D", "FOREGROUND"]
