@@ -27,22 +27,42 @@ MAINTAINER grode, gabriel_rode@hotmail.com
 # RUN echo "deb http://us.archive.ubuntu.com/ubuntu/ bionic universe" > /etc/apt/sources.list
 
 
-# RUN apt-get update && apt-get install apache2 -y
+# Configuro la pass por defecto para la instalacion de mysql
+RUN debconf-set-selections << "mysql-community-server mysql-community-server/root-pass password root"
+RUN debconf-set-selections << "mysql-community-server mysql-community-server/re-root-pass password root"
 
 # Hace que la instalacion de tz-data no se cuelgue
 ENV DEBIAN_FRONTEND="noninteractive"
 
 RUN apt-get update && apt-get install -y \ 
-	apache2 \
-	php \
-	libapache2-mod-php
+   # apache2 \
+   # libapache2-mod-php \
+   mysql-server
+   # php \ 
+   # php \
+   # php-fpm \
+   # php-pdo-mysql \
+   # php-mbstring \
+   # php-mysqli \
+   # php-curl \
+   # php-cli \
+   # php-gd
 
-# install apache2
-#RUN apt-get -y install apache2
+# Install Composer
+# COPY --from=composer /usr/bin/composer /usr/bin/composer
 
-# install php
-#RUN apt-get -y install php5
-#RUN apt-get -y install libapache2-mod-php5
+# Para controlar que el servicio de mysql esta activo (o no)
+# service mysql status
+
+# Para arrancar el servicio de Base de Datos
+RUN service mysql start
+
+COPY desafio_afip-master /var/app/desafio_afip-master
+
+#Creacion de la base de datos 
+RUN mysql -u root -p root trader_desafio_afip < /var/app/desafio_afip-master/data/trader_desafio_afip.sql
+
+# RUN source /var/app/desafio_afip-master/data/trader_desafio_afip.sql
 
 # hack for not start mysql-server cause of /sbin/initctl
 #RUN dpkg-divert --local --rename --add /sbin/initctl
@@ -57,24 +77,13 @@ RUN apt-get update && apt-get install -y \
 #RUN (/usr/bin/mysqld_safe &); sleep 5; echo "grant all privileges on *.* to root@'%';" | mysql -u root # -ppassword
 #CMD ["/usr/bin/mysqld_safe"]
 
-## Aca empiezo a tocar para customiza mi instalación
 
-# install subversion
-#RUN apt-get -y install subversion
 
-# create directory for libs
-# RUN mkdir -p /home/sfproject/lib/vendor
-
-# install symfony via svn
-# RUN cd /home/sfproject/lib/vendor
-# RUN svn checkout http://svn.symfony-project.com/branches/1.4/ /home/sfproject/lib/vendor/symfony
 
 # copy script create symfony
-# ADD files/symfony_create_project.sh /home/sfproject/symfony_create_project.sh
-# RUN chmod +x /home/sfproject/symfony_create_project.sh
-
-# create project
-# RUN /home/sfproject/symfony_create_project.sh
+# ADD files/symfony_config.sh /home/symfony_config.sh
+# RUN chmod +x /home/symfony_config.sh
+# RUN /home/symfony_config
 
 # apache2 configuration
 # ADD files/apache2_conf.sh /home/sfproject/apache2_conf.sh
