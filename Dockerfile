@@ -8,10 +8,6 @@ MAINTAINER grode, gabriel_rode@hotmail.com
 # copy config file for mysql
 #ADD files/my.cnf /etc/mysql/my.cnf
 
-#
-#
-#
-
 
 # Configuro el repositorio de paquetes
 # Referencias para saber que significa cada cosa:
@@ -36,11 +32,12 @@ ENV DEBIAN_FRONTEND="noninteractive"
 RUN apt-get update && apt-get install -y \ 
    # apache2 \
    # libapache2-mod-php \
-   # php \ 
-   # php \
+   git \          # Lo usa composer
+   php \ 
+   php-mbstring \ # Lo usa composer
+   php-zip \      # Lo usa composer
    # php-fpm \
    # php-pdo-mysql \
-   # php-mbstring \
    # php-mysqli \
    # php-curl \
    # php-cli \
@@ -48,35 +45,27 @@ RUN apt-get update && apt-get install -y \
    mysql-server
 
 # Install Composer
-# COPY --from=composer /usr/bin/composer /usr/bin/composer
+COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 # Para controlar que el servicio de mysql esta activo (o no)
 # service mysql status
 
-# Para arrancar el servicio de Base de Datos
-# NO puedo usar esto!
-# https://stackoverflow.com/questions/25135897/how-to-automatically-start-a-service-when-running-a-docker-container?noredirect=1&lq=1
-# RUN service mysql start
-# CMD mysql start
+# Transfiero la aplicacion
 
 COPY desafio_afip-master /var/app/desafio_afip-master
 
-#Creacion de la base de datos 
+# Creacion de la base de datos 
 
 ADD files/init_db.sh /tmp/init_db.sh
 RUN chmod +x /tmp/init_db.sh
 RUN /tmp/init_db.sh
 
-# RUN mysql -u root -p root < /var/app/desafio_afip-master/data/sql/trader_desafio_afip.sql
-
-# RUN source /var/app/desafio_afip-master/data/trader_desafio_afip.sql
-
-
+# Configuro Apache 
 
 # copy script create symfony
-# ADD files/symfony_config.sh /home/symfony_config.sh
-# RUN chmod +x /home/symfony_config.sh
-# RUN /home/symfony_config
+ADD files/symfony_config.sh /tmp/symfony_config.sh
+RUN chmod +x /tmp/symfony_config.sh
+RUN /tmp/symfony_config.sh
 
 # apache2 configuration
 # ADD files/apache2_conf.sh /home/sfproject/apache2_conf.sh
@@ -87,14 +76,6 @@ RUN /tmp/init_db.sh
 # ENV APACHE_RUN_USER www-data
 # ENV APACHE_RUN_GROUP www-data
 # ENV APACHE_LOG_DIR /var/log/apache2
-
-# add config for swift_mailer
-# ADD files/factories_yml.sh /home/sfproject/factories_yml.sh
-# RUN chmod +x /home/sfproject/factories_yml.sh
-# RUN /home/sfproject/factories_yml.sh
-
-# add code for send mail example
-# ADD files/index.php /home/sfproject/web/index.php
 
 # install ssh for maintainance
 # RUN apt-get install -y openssh-server
