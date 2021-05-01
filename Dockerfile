@@ -26,7 +26,6 @@ MAINTAINER grode, gabriel_rode@hotmail.com
 # RUN echo "deb http://us.archive.ubuntu.com/ubuntu/ bionic-updates main restricted" > /etc/apt/sources.list
 # RUN echo "deb http://us.archive.ubuntu.com/ubuntu/ bionic universe" > /etc/apt/sources.list
 
-
 # Configuro la pass por defecto para la instalacion de mysql
 RUN debconf-set-selections << "mysql-community-server mysql-community-server/root-pass password root"
 RUN debconf-set-selections << "mysql-community-server mysql-community-server/re-root-pass password root"
@@ -37,7 +36,6 @@ ENV DEBIAN_FRONTEND="noninteractive"
 RUN apt-get update && apt-get install -y \ 
    # apache2 \
    # libapache2-mod-php \
-   mysql-server
    # php \ 
    # php \
    # php-fpm \
@@ -47,6 +45,7 @@ RUN apt-get update && apt-get install -y \
    # php-curl \
    # php-cli \
    # php-gd
+   mysql-server
 
 # Install Composer
 # COPY --from=composer /usr/bin/composer /usr/bin/composer
@@ -55,28 +54,22 @@ RUN apt-get update && apt-get install -y \
 # service mysql status
 
 # Para arrancar el servicio de Base de Datos
-RUN service mysql start
+# NO puedo usar esto!
+# https://stackoverflow.com/questions/25135897/how-to-automatically-start-a-service-when-running-a-docker-container?noredirect=1&lq=1
+# RUN service mysql start
+# CMD mysql start
 
 COPY desafio_afip-master /var/app/desafio_afip-master
 
 #Creacion de la base de datos 
-RUN mysql -u root -p root trader_desafio_afip < /var/app/desafio_afip-master/data/trader_desafio_afip.sql
+
+ADD files/init_db.sh /tmp/init_db.sh
+RUN chmod +x /tmp/init_db.sh
+RUN /tmp/init_db.sh
+
+# RUN mysql -u root -p root < /var/app/desafio_afip-master/data/sql/trader_desafio_afip.sql
 
 # RUN source /var/app/desafio_afip-master/data/trader_desafio_afip.sql
-
-# hack for not start mysql-server cause of /sbin/initctl
-#RUN dpkg-divert --local --rename --add /sbin/initctl
-#RUN ln -s /bin/true /sbin/initctl
-
-# install mysql
-#RUN apt-get install -y -o Dpkg::Options::="--force-confold" mysql-common
-#RUN DEBIAN_FRONTEND=noninteractive apt-get install -q -y mysql-server
-#RUN apt-get install -y libapache2-mod-auth-mysql php5-mysql
-
-# config for root login from remote
-#RUN (/usr/bin/mysqld_safe &); sleep 5; echo "grant all privileges on *.* to root@'%';" | mysql -u root # -ppassword
-#CMD ["/usr/bin/mysqld_safe"]
-
 
 
 
