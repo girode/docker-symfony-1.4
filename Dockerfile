@@ -30,18 +30,18 @@ RUN debconf-set-selections << "mysql-community-server mysql-community-server/re-
 ENV DEBIAN_FRONTEND="noninteractive"
 
 RUN apt-get update && apt-get install -y \ 
-   # apache2 \
-   # libapache2-mod-php \
-   git \          # Lo usa composer
+   apache2 \
+   libapache2-mod-php \
+   git \          
    php \ 
-   php-mbstring \ # Lo usa composer
-   php-zip \      # Lo usa composer
-   # php-fpm \
-   # php-pdo-mysql \
-   # php-mysqli \
-   # php-curl \
-   # php-cli \
-   # php-gd
+   php-mbstring \ 
+   php-zip \      
+   php-fpm \
+   php-pdo-mysql \
+   php-mysqli \
+   php-curl \
+   php-cli \
+   php-gd \
    mysql-server
 
 # Install Composer
@@ -52,7 +52,7 @@ COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 # Transfiero la aplicacion
 
-COPY desafio_afip-master /var/app/desafio_afip-master
+COPY desafio_afip /var/app/desafio_afip
 
 # Creacion de la base de datos 
 
@@ -68,9 +68,9 @@ RUN chmod +x /tmp/symfony_config.sh
 RUN /tmp/symfony_config.sh
 
 # apache2 configuration
-# ADD files/apache2_conf.sh /home/sfproject/apache2_conf.sh
-# RUN chmod +x /home/sfproject/apache2_conf.sh
-# RUN /home/sfproject/apache2_conf.sh
+ADD files/apache2_conf.sh /tmp/apache2_conf.sh
+RUN chmod +x /tmp/apache2_conf.sh
+RUN /tmp/apache2_conf.sh
 
 # environment value
 # ENV APACHE_RUN_USER www-data
@@ -97,9 +97,12 @@ RUN /tmp/symfony_config.sh
 
 # expose http & ssh port
 # https://stackoverflow.com/questions/22111060/what-is-the-difference-between-expose-and-publish-in-docker
-#EXPOSE 8080
-EXPOSE 80
+EXPOSE 8080
 EXPOSE 22
 
 # Arranco Apache
+ADD files/startup.sh /tmp/startup.sh
+RUN chmod +x /tmp/startup.sh
+CMD /tmp/startup.sh
+
 # CMD ["apachectl", "-D", "FOREGROUND"]

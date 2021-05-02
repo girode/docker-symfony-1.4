@@ -1,13 +1,12 @@
 #!/bin/bash
 
-cd /var/app/desafio_afip-master/
+cd /var/app/desafio_afip
 
-php composer install
+composer install
 
 # Configurar base de datos
 php symfony configure:database "mysql:host=127.0.0.1;dbname=trader_desafio_afip" root root
 
-# Directory Structure Rights
 mkdir cache/
 mkdir log/
 
