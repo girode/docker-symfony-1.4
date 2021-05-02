@@ -8,7 +8,6 @@ MAINTAINER grode, gabriel_rode@hotmail.com
 # copy config file for mysql
 #ADD files/my.cnf /etc/mysql/my.cnf
 
-
 # Configuro el repositorio de paquetes
 # Referencias para saber que significa cada cosa:
 #   - https://askubuntu.com/questions/1032415/what-is-deb-deb-src-stable-xenial-main-in-etc-apt-sources-list
@@ -90,11 +89,6 @@ RUN /tmp/apache2_conf.sh
 # RUN apt-get -y install less
 # RUN apt-get -y install vim
 
-# ADD files/myEmail.class.php /home/sfproject/apps/frontend/lib/myEmail.class.php
-# ADD files/app.yml /home/sfproject/apps/frontend/config/app.yml
-# ADD files/_registrationHTML.php /home/sfproject/apps/frontend/modules/mail/_registrationHTML.php
-# ADD files/_registrationTEXT.php /home/sfproject/apps/frontend/modules/mail/_registrationTEXT.php
-
 # expose http & ssh port
 # https://stackoverflow.com/questions/22111060/what-is-the-difference-between-expose-and-publish-in-docker
 EXPOSE 8080
@@ -104,5 +98,3 @@ EXPOSE 22
 ADD files/startup.sh /tmp/startup.sh
 RUN chmod +x /tmp/startup.sh
 CMD /tmp/startup.sh
-
-# CMD ["apachectl", "-D", "FOREGROUND"]
