@@ -3,6 +3,8 @@
 
 cat << EOF > /etc/apache2/sites-available/desafio_afip.conf
 
+ServerName localhost
+
 Listen *:8080
 
 <VirtualHost *:8080>
@@ -19,8 +21,8 @@ Listen *:8080
     Require all granted
   </Directory>
 
-  ErrorLog ${APACHE_LOG_DIR}/error.log
-  CustomLog ${APACHE_LOG_DIR}/access.log combined
+  ErrorLog  /error.log
+  CustomLog /access.log combined
 
 </VirtualHost>
 EOF
