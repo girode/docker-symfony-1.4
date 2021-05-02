@@ -8,7 +8,9 @@ service mysql start
 
 /usr/bin/mysqld_safe --skip-grant-tables &
 sleep 5
+# https://stackoverflow.com/a/46908573
 mysql -u root < /var/app/desafio_afip/data/sql/trader_desafio_afip.sql
+mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root'"
 
 # hack for not start mysql-server cause of /sbin/initctl
 #RUN dpkg-divert --local --rename --add /sbin/initctl
