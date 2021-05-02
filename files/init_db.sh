@@ -6,7 +6,6 @@ service mysql start
 #RUN (/usr/bin/mysqld_safe &); sleep 5; echo "grant all privileges on *.* to root@'%';" | mysql -u root # -ppassword
 #CMD ["/usr/bin/mysqld_safe"]
 
-# (/usr/bin/mysqld_safe &); sleep 5; echo "grant all privileges on *.* to root@'%';" | mysql -u root # -ppassword
 /usr/bin/mysqld_safe --skip-grant-tables &
 sleep 5
 mysql -u root < /var/app/desafio_afip/data/sql/trader_desafio_afip.sql
